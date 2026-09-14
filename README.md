@@ -22,3 +22,7 @@ This project used React/Typescript for frontend, and Supabase for backend.
 Vite was used for the build tool and dev server.
 
 React/Typescript was used because it offers static type-safety. Additionally, React makes good use of prop drilling with TypeScript interfaces.
+
+Supabase was chosen because of its generous limits, and additionally because I would not have to implement a complete backend by myself
+
+Vite was used because of fast local server refresh, as well as being a general-purpose build tool for github pages
