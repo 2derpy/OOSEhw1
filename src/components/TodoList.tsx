@@ -28,6 +28,7 @@ export function TodoList({ todos, onToggle, onDelete }: TodoListProps) {
                 ✕
             </button>
           </li>
+          {/* Separate line for description and date */}
           <li key={todo.id + "body"} className="todo-body">
             <label> {todo.description} </label>
             <label> {todo.date} </label>

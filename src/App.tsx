@@ -13,8 +13,10 @@ function App() {
 
       <TodoForm onAdd={addTodo} />
 
+      {/* display error message if not loaded */}
       {loading && <p>Loading…</p>}
       {error && <p className="error">{error}</p>}
+
 
       {!loading && !error && (
         <>
