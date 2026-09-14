@@ -8,20 +8,12 @@ type Insert<T extends TableName> = Database['public']['Tables'][T]['Insert'];
 type Update<T extends TableName> = Database['public']['Tables'][T]['Update'];
 
 interface UseSupabaseCrudOptions {
-  /** Column to order results by. Defaults to 'created_at'. */
   orderBy?: string;
   ascending?: boolean;
-  /** Subscribe to realtime INSERT/UPDATE/DELETE events for this table. */
   realtime?: boolean;
 }
 
-/**
- * A generic CRUD hook for any Supabase table.
- *
- * Usage:
- *   const { data, loading, error, create, update, remove, refetch } =
- *     useSupabaseCrud<'items'>('items');
- */
+
 export function useSupabaseCrud<T extends TableName>(
   table: T,
   options: UseSupabaseCrudOptions = {}
@@ -44,7 +36,7 @@ export function useSupabaseCrud<T extends TableName>(
     if (fetchError) {
       setError(fetchError.message);
     } else {
-      setData((rows ?? []) as Row<T>[]);
+      setData((rows ?? []) as unknown as Row<T>[]);
     }
     setLoading(false);
   }, [table, orderBy, ascending]);
@@ -53,7 +45,7 @@ export function useSupabaseCrud<T extends TableName>(
     async (values: Insert<T>) => {
       const { data: created, error: createError } = await supabase
         .from(table)
-        .insert(values)
+        .insert(values as never)
         .select()
         .single();
 
@@ -62,8 +54,8 @@ export function useSupabaseCrud<T extends TableName>(
         return { data: null, error: createError };
       }
 
-      setData((prev) => [created as Row<T>, ...prev]);
-      return { data: created as Row<T>, error: null };
+      setData((prev) => [created as unknown as Row<T>, ...prev]);
+      return { data: created as unknown as Row<T>, error: null };
     },
     [table]
   );
@@ -72,8 +64,8 @@ export function useSupabaseCrud<T extends TableName>(
     async (id: string, values: Update<T>) => {
       const { data: updated, error: updateError } = await supabase
         .from(table)
-        .update(values)
-        .eq('id', id)
+        .update(values as never)
+        .eq('id' as never, id)
         .select()
         .single();
 
@@ -83,16 +75,16 @@ export function useSupabaseCrud<T extends TableName>(
       }
 
       setData((prev) =>
-        prev.map((row) => ((row as { id: string }).id === id ? (updated as Row<T>) : row))
+        prev.map((row) => ((row as { id: string }).id === id ? (updated as unknown as Row<T>) : row))
       );
-      return { data: updated as Row<T>, error: null };
+      return { data: updated as unknown as Row<T>, error: null };
     },
     [table]
   );
 
   const remove = useCallback(
     async (id: string) => {
-      const { error: deleteError } = await supabase.from(table).delete().eq('id', id);
+      const { error: deleteError } = await supabase.from(table).delete().eq('id' as never, id);
 
       if (deleteError) {
         setError(deleteError.message);
