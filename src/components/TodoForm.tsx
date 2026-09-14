@@ -1,11 +1,13 @@
 import { useState, type FormEvent } from 'react';
 
 interface TodoFormProps {
-  onAdd: (title: string) => Promise<void>;
+  onAdd: (title: string, description: string, date : string) => Promise<void>;
 }
 
 export function TodoForm({ onAdd }: TodoFormProps) {
   const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [date, setDate] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
@@ -14,8 +16,10 @@ export function TodoForm({ onAdd }: TodoFormProps) {
     if (!trimmed) return;
 
     setSubmitting(true);
-    await onAdd(trimmed);
+    await onAdd(trimmed, description, date);
     setTitle('');
+    setDescription('');
+    setDate('');
     setSubmitting(false);
   };
 
@@ -24,7 +28,19 @@ export function TodoForm({ onAdd }: TodoFormProps) {
       <input
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        placeholder="What needs doing?"
+        placeholder="Name"
+        aria-label="New todo"
+      />
+      <input
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        placeholder="Description(optional)"
+        aria-label="New todo"
+      />
+      <input
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
+        placeholder="Date"
         aria-label="New todo"
       />
       <button type="submit" disabled={submitting}>

@@ -24,11 +24,11 @@ export function useTodos() {
     setLoading(false);
   }, []);
 
-  const addTodo = useCallback(async (title: string) => {
-    const values: TodoInsert = { title };
+  const addTodo = useCallback(async (title: string, description: string, date: string) => {
+    const values: TodoInsert = { title, description, date };
     const { data, error: insertError } = await supabase
       .from('todos')
-      .insert(values)
+      .insert(values as never)
       .select()
       .single();
 
@@ -42,7 +42,7 @@ export function useTodos() {
   const updateTodo = useCallback(async (id: string, values: TodoUpdate) => {
     const { data, error: updateError } = await supabase
       .from('todos')
-      .update(values)
+      .update(values as never)
       .eq('id', id)
       .select()
       .single();
@@ -55,7 +55,11 @@ export function useTodos() {
   }, []);
 
   const toggleTodo = useCallback(
-    (id: string, isComplete: boolean) => updateTodo(id, { is_complete: isComplete }),
+    (id: string, description: string | undefined, date: string, isComplete: boolean) => updateTodo(id, {
+      is_complete: isComplete,
+      description: description,
+      date: date,
+    }),
     [updateTodo]
   );
 

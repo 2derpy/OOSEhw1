@@ -35,6 +35,13 @@
   border-bottom: 1px solid #eee;
 }
 
+.todo-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+}
+
 .todo-item label {
   display: flex;
   align-items: center;
